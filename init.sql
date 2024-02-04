@@ -1,0 +1,7 @@
+CREATE DATABASE VKR;
+\c VKR;
+CREATE TABLE role (
+    id BIGINT NOT NULL,
+    value VARCHAR(255)
+);
+INSERT INTO role (id, vale) VALUES (1, 'USER'), (2, 'ADMIN');
