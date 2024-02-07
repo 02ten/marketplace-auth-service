@@ -57,6 +57,6 @@ jobs:
           git config --global user.name "02ten"
           git add .
           git commit -m "Update auth-service image version"
-          git push -u https://${{ secrets.USERNAME }}:${{ secrets.CONFIG_TOKEN }}@github.com/02ten/hello-manifest.git main
+          git push -u https://${{ secrets.USERNAME }}:${{ secrets.CONFIG_TOKEN }}@github.com/02ten/marketplace-k8s-config.git main
         env:
           GITHUB_TOKEN: ${{ secrets.CONFIG_TOKEN }}
