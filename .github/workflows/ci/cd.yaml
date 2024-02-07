@@ -1,0 +1,62 @@
+name: ci/cd
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project sources
+        uses: actions/checkout@v4
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Run build and tests with Gradle Wrapper
+        run: ./gradlew build
+  container:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: 02ten/marketplace-auth:${{ github.sha }}
+  manifest:
+    needs: [container]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repo
+        run: |
+          git clone https://github.com/02ten/hello-manifest.git
+        env:
+          GITHUB_TOKEN: ${{ secrets.CONFIG_TOKEN }}
+      - name: Update yaml
+        working-directory: ./hello-manifest
+        run: |
+          sed -i 's/image: 02ten\/hello:.*/image: 02ten\/hello:${{ github.sha }}/g' application/app1/auth.yaml
+          git config --global user.email "89169604848t@gmail.com"
+          git config --global user.name "02ten"
+          git add .
+          git commit -m "Update image version"
+          git push -u https://${{ secrets.USERNAME }}:${{ secrets.CONFIG_TOKEN }}@github.com/02ten/hello-manifest.git main
+        env:
+          GITHUB_TOKEN: ${{ secrets.CONFIG_TOKEN }}

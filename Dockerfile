@@ -1,7 +1,7 @@
 FROM gradle:latest AS TEMP_BUILD
 ENV DIR=/app
 WORKDIR $DIR
-COPY ../Auth_Service $DIR
+COPY . $DIR
 USER root
 RUN gradle bootJar
 RUN echo "Build Completed!"
