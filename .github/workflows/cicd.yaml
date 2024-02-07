@@ -46,17 +46,17 @@ jobs:
     steps:
       - name: Clone repo
         run: |
-          git clone https://github.com/02ten/hello-manifest.git
+          git clone https://github.com/02ten/marketplace-k8s-config.git
         env:
           GITHUB_TOKEN: ${{ secrets.CONFIG_TOKEN }}
       - name: Update yaml
-        working-directory: ./hello-manifest
+        working-directory: ./marketplace-k8s-config
         run: |
-          sed -i 's/image: 02ten\/hello:.*/image: 02ten\/hello:${{ github.sha }}/g' application/app1/auth.yaml
+          sed -i 's/image: 02ten\/marketplace-auth:.*/image: 02ten\/marketplace-auth:${{ github.sha }}/g' application/auth/auth.yaml
           git config --global user.email "89169604848t@gmail.com"
           git config --global user.name "02ten"
           git add .
-          git commit -m "Update image version"
+          git commit -m "Update auth-service image version"
           git push -u https://${{ secrets.USERNAME }}:${{ secrets.CONFIG_TOKEN }}@github.com/02ten/hello-manifest.git main
         env:
           GITHUB_TOKEN: ${{ secrets.CONFIG_TOKEN }}
