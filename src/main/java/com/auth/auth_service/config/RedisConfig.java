@@ -29,8 +29,7 @@ public class RedisConfig {
         redisConfig.setUsername(redisUsername);
         return new LettuceConnectionFactory(redisConfig);
     }
-
-    @Bean
+    @Bean()
     public RedisTemplate<String, String> redisTemplate() {
         RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
