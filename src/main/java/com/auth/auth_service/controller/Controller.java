@@ -16,9 +16,10 @@ public class Controller {
     private final AuthService authService;
 
     @GetMapping("hello/user")
-    public ResponseEntity<String> helloUser(){
+    public ResponseEntity<JwtAuthentication> helloUser(){
         final JwtAuthentication authInfo = authService.getAuthInfo();
-        return ResponseEntity.ok("Hello user");
+        System.out.println("Here");
+        return ResponseEntity.ok(authInfo);
     }
     @GetMapping("hello/admin")
     public ResponseEntity<String> helloAdmin(){
