@@ -23,9 +23,9 @@ public final class JwtUtils {
 
     private static Set<Role> getRoles(Claims claims) {
         System.out.println(claims.get("roles"));
-        final List<HashMap<String, String>> roles = claims.get("roles", List.class);
+        final List<String> roles = claims.get("roles", List.class);
         return roles.stream()
-                .map((x) -> new Role(x.get("authority")))
+                .map(Role::new)
                 .collect(Collectors.toSet());
     }
 
