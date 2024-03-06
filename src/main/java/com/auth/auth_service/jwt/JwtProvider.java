@@ -1,5 +1,6 @@
 package com.auth.auth_service.jwt;
 
+import com.auth.auth_service.model.Role;
 import com.auth.auth_service.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -16,6 +17,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -39,7 +41,7 @@ public class JwtProvider {
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
                 .claim("id", user.getId())
-                .claim("roles", user.getRoles())
+                .claim("roles", user.getRoles().stream().map(Role::getAuthority).collect(Collectors.toList()))
                 .claim("firstName", user.getFirstName())
                 .compact();
     }
