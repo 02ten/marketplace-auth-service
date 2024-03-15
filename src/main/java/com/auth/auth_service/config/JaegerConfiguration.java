@@ -13,7 +13,7 @@ public class JaegerConfiguration {
                 .withReporter(new io.jaegertracing.Configuration.ReporterConfiguration()
                         .withLogSpans(true)
                         .withSender(new io.jaegertracing.Configuration.SenderConfiguration()
-                                .withEndpoint("http://jaeger.default:14268/api/traces"))) // HTTP endpoint
+                                .withEndpoint("http://jaeger.jaeger:14268/api/traces"))) // HTTP endpoint
                 .getTracer();
     }
 }
