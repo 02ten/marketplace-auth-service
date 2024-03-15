@@ -12,6 +12,7 @@ import com.auth.auth_service.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +27,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Log4j
 @RequiredArgsConstructor
 public class AuthService {
     private final JwtProvider jwtProvider;
@@ -36,7 +38,11 @@ public class AuthService {
     private final RedisTemplate<String, String> redisTemplate;
 
     public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException {
-        if (!userRepository.existsByLogin(authRequest.getLogin())) throw new AuthException("Неверные данные");
+        log.info("Login user");
+        if (!userRepository.existsByLogin(authRequest.getLogin())){
+            log.error("Invalid Data");
+            throw new AuthException("Invalid data");
+        }
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPassword());
         Authentication auth = authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(auth);
@@ -45,12 +51,16 @@ public class AuthService {
         final String accessToken = jwtProvider.generateAccessToken(user);
         final String refreshToken = jwtProvider.generateRefreshToken(user);
         redisTemplate.opsForValue().set(user.getLogin(), refreshToken, 45, TimeUnit.MINUTES);
+        log.info("Successful authorization");
         return new JwtResponse(accessToken, refreshToken);
     }
 
     public String register(RegisterDTO registeredUser) throws AuthException {
-        if (userRepository.existsByLogin(registeredUser.getLogin()))
+        log.info("Registration new user");
+        if (userRepository.existsByLogin(registeredUser.getLogin())){
+            log.error("Email already taken");
             throw new AuthException("Пользователь с таким логином уже существует");
+        }
         Role role = roleRepository.findByVale("USER");
         User user = new User();
         user.setLogin(registeredUser.getLogin());
@@ -59,6 +69,7 @@ public class AuthService {
         user.setLastName(registeredUser.getLastName());
         user.setRoles(Set.of(role));
         userRepository.save(user);
+        log.error("Registration successful");
         return "Регистрация успешна";
     }
 

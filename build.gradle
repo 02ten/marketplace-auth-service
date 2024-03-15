@@ -32,6 +32,7 @@ dependencies {
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
     runtimeOnly 'org.postgresql:postgresql'
     implementation 'io.jaegertracing:jaeger-client:1.6.0'
+    implementation 'org.graylog2:gelfj:1.1.16'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
