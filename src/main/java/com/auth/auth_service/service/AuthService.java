@@ -40,7 +40,7 @@ public class AuthService {
     public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException {
         log.info("Login user");
         if (!userRepository.existsByLogin(authRequest.getLogin())){
-            log.error("Invalid Data");
+            log.info("Invalid Data");
             throw new AuthException("Invalid data");
         }
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPassword());
