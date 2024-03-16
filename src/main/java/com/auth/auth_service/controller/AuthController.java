@@ -38,6 +38,10 @@ public class AuthController{
     }
     @PostMapping("register")
     public ResponseEntity<String> register(@RequestBody RegisterDTO user) throws AuthException {
+        Span span = tracer.buildSpan("register").start();
+        Tags.HTTP_METHOD.set(span, "POST");
+        Tags.HTTP_URL.set(span,"api/auth/login");
+        span.finish();
         String status = authService.register(user);
         return ResponseEntity.ok(status);
     }
