@@ -40,7 +40,7 @@ public class AuthController{
     public ResponseEntity<String> register(@RequestBody RegisterDTO user) throws AuthException {
         Span span = tracer.buildSpan("register").start();
         Tags.HTTP_METHOD.set(span, "POST");
-        Tags.HTTP_URL.set(span,"api/auth/login");
+        Tags.HTTP_URL.set(span,"api/auth/register");
         span.finish();
         String status = authService.register(user);
         return ResponseEntity.ok(status);
