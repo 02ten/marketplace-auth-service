@@ -6,7 +6,7 @@
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } [%t] --- %-40.40logger{39} : %m%n"/>
         </layout>
     </appender>
-    <appender name="graylog" class="org.graylog2.log.GelfAppender">
+    <appender name="graylogError" class="org.graylog2.log.GelfAppender">
         <param name="graylogHost" value="tcp:graylog.graylog"/>
         <param name="originHost" value="localhost"/>
         <param name="graylogPort" value="12201"/>
@@ -14,7 +14,17 @@
         <param name="addExtendedInformation" value="true"/>
         <param name="facility" value="log4j"/>
         <param name="Threshold" value="INFO"/>
-        <param name="additionalFields" value="{'environment': 'DEV', 'application': 'GraylogDemoApplication'}"/>
+        <param name="additionalFields" value="{'environment': 'DEV', 'application': 'AuthApplication'}"/>
+    </appender>
+    <appender name="graylogError" class="org.graylog2.log.GelfAppender">
+        <param name="graylogHost" value="tcp:graylog.graylog"/>
+        <param name="originHost" value="localhost"/>
+        <param name="graylogPort" value="12201"/>
+        <param name="extractStacktrace" value="true"/>
+        <param name="addExtendedInformation" value="true"/>
+        <param name="facility" value="log4j"/>
+        <param name="Threshold" value="ERROR"/>
+        <param name="additionalFields" value="{'environment': 'DEV', 'application': 'AuthApplication'}"/>
     </appender>
     <root>
         <priority value="DEBUG"/>
