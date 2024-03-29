@@ -37,10 +37,10 @@ public class JwtProvider {
         final Date accessExpiration = Date.from(accessExpirationInstant);
         return Jwts.builder()
                 .setHeaderParam("kid", "sim2")
+                .setHeaderParam("id", user.getId())
                 .setSubject(user.getLogin())
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
-                .claim("id", user.getId())
                 .claim("roles", user.getRoles().stream().map(Role::getAuthority).collect(Collectors.toList()))
                 .claim("firstName", user.getFirstName())
                 .compact();
