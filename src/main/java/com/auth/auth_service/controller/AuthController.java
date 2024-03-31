@@ -37,13 +37,20 @@ public class AuthController{
         return ResponseEntity.ok(token);
     }
     @PostMapping("register")
-    public ResponseEntity<String> register(@RequestBody RegisterDTO user) throws AuthException {
+    public ResponseEntity<String> register(@RequestBody RegisterDTO user){
         Span span = tracer.buildSpan("register").start();
         Tags.HTTP_METHOD.set(span, "POST");
         Tags.HTTP_URL.set(span,"api/auth/register");
+        log.info("Registration new user");
         span.finish();
-        String status = authService.register(user);
-        return ResponseEntity.ok(status);
+        try{
+            authService.register(user);
+            log.info("Registration successful");
+            return ResponseEntity.ok("Регистрация успешна");
+        }catch (AuthException authException){
+            log.error("Email already taken");
+            return ResponseEntity.ok("Пользователь с таким логином уже занят");
+        }
     }
     @PostMapping("token")
     public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) throws AuthException {

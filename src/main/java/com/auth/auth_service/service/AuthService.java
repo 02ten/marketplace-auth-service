@@ -55,10 +55,8 @@ public class AuthService {
         return new JwtResponse(accessToken, refreshToken);
     }
 
-    public String register(RegisterDTO registeredUser) throws AuthException {
-        log.info("Registration new user");
+    public void register(RegisterDTO registeredUser) throws AuthException {
         if (userRepository.existsByLogin(registeredUser.getLogin())){
-            log.error("Email already taken");
             throw new AuthException("Пользователь с таким логином уже существует");
         }
         Role role = roleRepository.findByVale("USER");
@@ -69,8 +67,6 @@ public class AuthService {
         user.setLastName(registeredUser.getLastName());
         user.setRoles(Set.of(role));
         userRepository.save(user);
-        log.error("Registration successful");
-        return "Регистрация успешна";
     }
 
     public JwtResponse getAccessToken(@NonNull String refreshToken) throws AuthException {

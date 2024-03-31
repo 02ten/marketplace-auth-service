@@ -77,14 +77,13 @@ class AuthServiceTest {
     }
 
     @Test
-    void register_Valid_ReturnsString() throws AuthException {
+    void register_Valid_SuccessfulSaving() throws AuthException {
         RegisterDTO registeredUser = new RegisterDTO("validLogin", "validPassword",
                 "Alexander", "Ten");
         Mockito.when(userRepository.existsByLogin(registeredUser.getLogin())).thenReturn(false);
         Mockito.when(passwordEncoder.encode(registeredUser.getPassword())).thenReturn("encryptedPassword");
         Mockito.when(roleRepository.findByVale("USER")).thenReturn(new Role("USER"));
-        String result = authService.register(registeredUser);
-        Assertions.assertEquals("Регистрация успешна", result);
+        authService.register(registeredUser);
     }
     @Test
     void register_Bad_ThrowsAuthException(){
