@@ -12,6 +12,7 @@ import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,13 +29,17 @@ public class AuthController{
     private Tracer tracer;
 
     @PostMapping("login")
-    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest authRequest) throws AuthException {
-        final JwtResponse token = authService.login(authRequest);
+    public ResponseEntity<?> login(@RequestBody JwtRequest authRequest) throws AuthException {
         Span span = tracer.buildSpan("login").start();
         Tags.HTTP_METHOD.set(span, "POST");
         Tags.HTTP_URL.set(span,"api/auth/login");
         span.finish();
-        return ResponseEntity.ok(token);
+        try{
+            final JwtResponse token = authService.login(authRequest);
+            return new ResponseEntity<>(token, HttpStatus.OK);
+        }catch (AuthException exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
     @PostMapping("register")
     public ResponseEntity<String> register(@RequestBody RegisterDTO user){
@@ -46,10 +51,10 @@ public class AuthController{
         try{
             authService.register(user);
             log.info("Registration successful");
-            return ResponseEntity.ok("Регистрация успешна");
+            return new ResponseEntity<>("Регистрация успешна", HttpStatus.OK);
         }catch (AuthException authException){
             log.error("Email already taken");
-            return ResponseEntity.ok("Пользователь с таким логином уже занят");
+            return new ResponseEntity<>(authException.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
     @PostMapping("token")
