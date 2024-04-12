@@ -44,6 +44,7 @@ public class AuthController{
     @PostMapping("register")
     public ResponseEntity<String> register(@RequestBody RegisterDTO user){
         Span span = tracer.buildSpan("register").start();
+        System.out.println(user.toString());
         Tags.HTTP_METHOD.set(span, "POST");
         Tags.HTTP_URL.set(span,"api/auth/register");
         log.info("Registration new user");
