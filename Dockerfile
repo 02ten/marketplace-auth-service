@@ -1,4 +1,4 @@
-FROM gradle:latest AS TEMP_BUILD
+FROM gradle:8.6 AS TEMP_BUILD
 ENV DIR=/app
 WORKDIR $DIR
 COPY . $DIR
