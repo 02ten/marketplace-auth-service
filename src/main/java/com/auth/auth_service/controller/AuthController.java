@@ -60,12 +60,17 @@ public class AuthController{
     }
     @PostMapping("token")
     public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) throws AuthException {
+        Span span = tracer.buildSpan("getting new access token").start();
+        Tags.HTTP_METHOD.set(span, "POST");
+        Tags.HTTP_URL.set(span,"api/auth/token");
+        log.info("Getting new access token");
         final JwtResponse token = authService.getAccessToken(request.getRefreshToken());
+        span.finish();
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("refresh")
-    public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) throws AuthException {
+    public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) throws AuthException {;
         final JwtResponse token = authService.refresh(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
