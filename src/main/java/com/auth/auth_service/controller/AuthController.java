@@ -65,6 +65,7 @@ public class AuthController{
         Tags.HTTP_URL.set(span,"api/auth/token");
         log.info("Getting new access token");
         final JwtResponse token = authService.getAccessToken(request.getRefreshToken());
+        System.out.println(token);
         span.finish();
         return ResponseEntity.ok(token);
     }
