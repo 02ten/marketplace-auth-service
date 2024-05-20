@@ -64,7 +64,7 @@ public class WebSecurityConfig {
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint))
                 .authorizeHttpRequests(
                         (authz) -> authz
-                                .requestMatchers("/api/auth/login", "/api/auth/token", "/api/auth/register").permitAll()
+                                .requestMatchers("/api/auth/login", "/api/auth/token", "/api/auth/register", "/api/admin/**").permitAll()
                                 .anyRequest().authenticated()
                 );
         http.addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
