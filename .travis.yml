@@ -1,3 +1,5 @@
 language: java
+jdk:
+  - openjdk17
 sudo: true
-script: chmod +x ./gradlew assemble
+script: ./gradlew build --refresh-dependencies
