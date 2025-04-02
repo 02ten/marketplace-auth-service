@@ -4,7 +4,7 @@ jdk:
 
 addons:
   sonarcloud:
-    organization: "02ten" # the key of the org you chose at step #3
-    token: $Sonar # encrypted value of your token
+    organization: "02ten"
+    token: $Sonar
 script:
   - ./gradlew build sonarqube -Dsonar.projectKey=marketplace-auth-service -Dsonar.organization=02ten -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$Sonar
